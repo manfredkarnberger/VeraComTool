@@ -47,11 +47,19 @@
         </ToolBar>
 
         <!-- Erstes DataGrid -->
-        <DataGrid x:Name="DataGridSentMessages" 
-            Grid.Row="2" 
-            ItemsSource="{Binding Messages}" 
-            AutoGenerateColumns="True"
-            Margin="5"/>
+
+        <DataGrid ItemsSource="{Binding Messages}"
+            AutoGenerateColumns="False"
+            Grid.Row="2"
+            Margin="5">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="CAN ID" Binding="{Binding CanID}" Width="*" />
+                <DataGridTextColumn Header="DLC" Binding="{Binding DLC}" Width="*" />
+                <DataGridTextColumn Header="Cycle (ms)" Binding="{Binding CycleTimeMs}" Width="*" />
+                <DataGridTextColumn Header="Tx Count" Binding="{Binding TxFrameCounter}" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
 
         <!-- Zweites DataGrid -->
         <DataGrid x:Name="DataGridReceivedMessages" 

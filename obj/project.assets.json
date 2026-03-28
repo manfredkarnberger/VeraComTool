@@ -337,11 +337,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\ws_VisualStudio\\VeraCOM\\VeraComTool.csproj",
+      "projectUniqueName": "D:\\ws_VisualStudio\\VeraComTool\\VeraComTool.csproj",
       "projectName": "VeraComTool",
-      "projectPath": "D:\\ws_VisualStudio\\VeraCOM\\VeraComTool.csproj",
+      "projectPath": "D:\\ws_VisualStudio\\VeraComTool\\VeraComTool.csproj",
       "packagesPath": "C:\\Users\\Manfred\\.nuget\\packages\\",
-      "outputPath": "D:\\ws_VisualStudio\\VeraCOM\\obj\\",
+      "outputPath": "D:\\ws_VisualStudio\\VeraComTool\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\DevExpress 25.2\\Components\\Offline Packages"

@@ -11,14 +11,14 @@ namespace VeraCom.Models
         public int CycleTimeMs { get; set; }
         public long LastTickCount { get; set; } // Hilfsvariable für das Timing
 
-        private int _sendCount;
-        public int SendCount
+        private int _txFrameCounter;
+        public int TxFrameCounter
         {
-            get => _sendCount;
+            get => _txFrameCounter;
             set
             {
-                _sendCount = value;
-                OnPropertyChanged(nameof(SendCount));
+                _txFrameCounter = value;
+                OnPropertyChanged(nameof(TxFrameCounter));
             }
         }
 

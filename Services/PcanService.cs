@@ -18,6 +18,9 @@ public class PcanService
 
     public bool IsRunning { get; private set; }
 
+    // ✅ EVENT
+    public event Action<CanMessage> MessageSent;
+
     public void Start(IEnumerable<CanMessage> messages)
     {
         var res = PCANBasic.Initialize(_handle, TPCANBaudrate.PCAN_BAUD_500K);
@@ -44,14 +47,23 @@ public class PcanService
 
     private void Send(CanMessage task)
     {
-        TPCANMsg msg = new TPCANMsg();
-        msg.ID = task.CanID;
-        msg.LEN = task.DLC;
-        msg.DATA = new byte[8];
-        Array.Copy(task.Payload, msg.DATA, Math.Min(task.DLC, (byte)8));
-        msg.MSGTYPE = TPCANMessageType.PCAN_MESSAGE_STANDARD;
+        TPCANMsg msg = new TPCANMsg
+        {
+            ID = task.CanID,
+            LEN = task.DLC,
+            DATA = new byte[8],
+            MSGTYPE = TPCANMessageType.PCAN_MESSAGE_STANDARD
+        };
 
-        PCANBasic.Write(_handle, ref msg);
+        Array.Copy(task.Payload, msg.DATA, Math.Min(task.DLC, (byte)8));
+
+        var result = PCANBasic.Write(_handle, ref msg);
+
+        if (result == TPCANStatus.PCAN_ERROR_OK)
+        {
+            // 👉 Event feuern (KEIN UI Zugriff hier!)
+            MessageSent?.Invoke(task);
+        }
     }
 
     public void Stop()

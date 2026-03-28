@@ -61,6 +61,15 @@ namespace VeraCom
             }
         }
 
+        private void OnMessageSent(CanMessage msg)
+        {
+            // 👉 zurück in UI Thread
+            Dispatcher.Invoke(() =>
+            {
+                msg.TxFrameCounter++;
+            });
+        }
+
         private void Start_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(currentDbPath) || !File.Exists(currentDbPath))
