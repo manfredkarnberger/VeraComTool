@@ -16,15 +16,19 @@ namespace VeraCom
 
         // ObservableCollection für DataGrid Binding
         public ObservableCollection<CanMessage> Messages { get; set; } = new();
+        public ObservableCollection<CanMessage> ReceivedMessages { get; set; } = new();
+        
+        private Dictionary<uint, CanMessage> _receivedMap = new();
 
         private string currentDbPath = "";
 
         public MainWindow()
         {
             InitializeComponent();
-
-            // DataContext setzen für Binding
             DataContext = this;
+
+            _pcanService.MessageSent += OnMessageSent;
+            _pcanService.MessageReceived += OnMessageReceived; // ✅
 
             LoadLastDatabase();
         }
@@ -61,12 +65,57 @@ namespace VeraCom
             }
         }
 
+        // ✅ Event Handler für MessageSent
         private void OnMessageSent(CanMessage msg)
         {
-            // 👉 zurück in UI Thread
+            // UI-Thread sicherstellen
             Dispatcher.Invoke(() =>
             {
+                // TxFrameCounter erhöhen → DataGrid aktualisiert automatisch
                 msg.TxFrameCounter++;
+            });
+        }
+
+        private void OnMessageReceived(CanMessage msg)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                if (_receivedMap.ContainsKey(msg.CanID))
+                {
+                    var existing = _receivedMap[msg.CanID];
+
+                    var now = DateTime.Now;
+
+                    // 🔥 Zykluszeit berechnen
+                    if (existing.LastTimestamp != default)
+                    {
+                        existing.RxCycleTime = Math.Round((now - existing.LastTimestamp).TotalMilliseconds);
+                    }
+
+                    existing.LastTimestamp = now;
+
+                    // Daten aktualisieren
+                    existing.DLC = msg.DLC;
+                    existing.Payload = msg.Payload;
+                    existing.Timestamp = now;
+
+                    existing.Refresh();
+                }
+                else
+                {
+                    msg.Timestamp = DateTime.Now;
+                    msg.LastTimestamp = msg.Timestamp;
+                    msg.RxCycleTime = 0;
+
+                    _receivedMap[msg.CanID] = msg;
+                    ReceivedMessages.Add(msg);
+
+                    // Sortieren nach CAN-ID
+                    var sorted = ReceivedMessages.OrderBy(m => m.CanID).ToList();
+                    ReceivedMessages.Clear();
+                    foreach (var m in sorted)
+                        ReceivedMessages.Add(m);
+                }
             });
         }
 
@@ -82,6 +131,7 @@ namespace VeraCom
 
             try
             {
+                // ⚠ Start mit ObservableCollection, KEIN ToList()!
                 _pcanService.Start(Messages);
             }
             catch (System.Exception ex)

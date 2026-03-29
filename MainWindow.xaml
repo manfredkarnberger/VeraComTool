@@ -31,7 +31,6 @@
         </Menu>
 
         <ToolBar Grid.Row="1">
-
             <!-- Start / Stop Buttons -->
             <Button Content="Start" Name="BtnStart" IsEnabled="False" Width="60" Click="Start_Click"/>
             <Button Content="Stop" Name="BtnStop" IsEnabled="False" Width="60" Click="Stop_Click"/>
@@ -47,26 +46,34 @@
         </ToolBar>
 
         <!-- Erstes DataGrid -->
-
         <DataGrid ItemsSource="{Binding Messages}"
-            AutoGenerateColumns="False"
-            Grid.Row="2"
-            Margin="5">
+          AutoGenerateColumns="False"
+          Grid.Row="2"
+          Margin="5">
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="CAN ID" Binding="{Binding CanID}" Width="*" />
                 <DataGridTextColumn Header="DLC" Binding="{Binding DLC}" Width="*" />
                 <DataGridTextColumn Header="Cycle (ms)" Binding="{Binding CycleTimeMs}" Width="*" />
+                <DataGridTextColumn Header="Payload" Binding="{Binding PayloadString}" Width="2*" />
                 <DataGridTextColumn Header="Tx Count" Binding="{Binding TxFrameCounter}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
 
         <!-- Zweites DataGrid -->
-        <DataGrid x:Name="DataGridReceivedMessages" 
-            Grid.Row="3" 
-            ItemsSource="{Binding Messages}" 
-            AutoGenerateColumns="True"
-            Margin="5"/>
+        <DataGrid Grid.Row="3"
+          ItemsSource="{Binding ReceivedMessages}"
+          AutoGenerateColumns="False"
+          Margin="5">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="CAN ID" Binding="{Binding CanID}" Width="*" />
+                <DataGridTextColumn Header="DLC" Binding="{Binding DLC}" Width="*" />
+                <DataGridTextColumn Header="Payload" Binding="{Binding PayloadString}" Width="2*" />
+                <DataGridTextColumn Header="Cycle (ms)" Binding="{Binding RxCycleTime}" Width="*" />
+                <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp}" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
 
     </Grid>
     

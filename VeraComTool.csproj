@@ -12,6 +12,8 @@
   <ItemGroup>
     <None Remove="DataBaseFile\can_config.db" />
     <None Remove="DataBaseFile\VeratronDevices.db" />
+    <None Remove="Images\deflink.png" />
+    <None Remove="Images\link.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +30,11 @@
   <ItemGroup>
     <Folder Include="Drivers\" />
     <Folder Include="Viewmodels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\deflink.png" />
+    <Resource Include="Images\link.png" />
   </ItemGroup>
 
   <ItemGroup>
